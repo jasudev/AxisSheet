@@ -73,14 +73,13 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     
     //MARK: - property
     private var dragGesture: some Gesture {
-        var max: CGFloat {
-            switch constants.axisType {
-            case .top, .leading: return constants.header.size - constants.size
-            case .bottom, .trailing: return constants.size - constants.header.size
-            }
-        }
         return DragGesture().updating(self.$translation) { value, state, _ in
-            state = getTranslationValue(value)
+            let value = getTranslationValue(value)
+            switch constants.axisType {
+            case .bottom, .trailing: if alpha == 0 && value > 0 { return }
+            case .top, .leading: if alpha == 0 && value < 0 { return }
+            }
+            state = value
         }
         .onEnded { value in
             if isPresented {
