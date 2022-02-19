@@ -28,14 +28,14 @@ import SwiftUI
 public extension View {
     
     func axisSheet(isPresented: Binding<Bool>,
-                                 constants: ASConstant) -> some View {
+                   constants: ASConstant = .init()) -> some View {
         AxisSheet(isPresented: isPresented, constants: constants) {
             self
         }
     }
     
     func axisSheet<Header: View>(isPresented: Binding<Bool>,
-                                 constants: ASConstant,
+                                 constants: ASConstant = .init(),
                                  header: @escaping () -> Header) -> some View {
         AxisSheet(isPresented: isPresented, constants: constants, header: header) {
             self
