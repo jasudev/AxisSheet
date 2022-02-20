@@ -1,5 +1,5 @@
 # **AxisSheet for SwiftUI**
-It is a library that handles the sheet view in 4 directions (.top, .bottom, .leading, .trailing) according to the axis type. It supports iOS and macOS.
+It is a library that handles the sheet view in 4 directions (.top, .bottom, .leading, .trailing) according to the axis mode. It supports iOS and macOS.
 
 [![Platforms](https://img.shields.io/badge/Platforms-iOS%20%7C%20macOS-blue?style=flat-square)](https://developer.apple.com/macOS)
 [![iOS](https://img.shields.io/badge/iOS-14.0-blue.svg)](https://developer.apple.com/iOS)
