@@ -25,7 +25,7 @@
 
 import SwiftUI
 
-/// A component that handles the sheet view in 4 directions (.top, .bottom, .leading, .trailing) according to the `ASAxisType`.
+/// A component that handles the sheet view in 4 directions (.top, .bottom, .leading, .trailing) according to the `ASAxisMode`.
 ///
 /// How to use the default header views:
 ///
@@ -56,7 +56,7 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     /// Indicates whether a content is currently presented.
     @Binding var isPresented: Bool
     
-    /// The axis type of the component.
+    /// The component status information.
     var constants: ASConstant
     
     /// The content of the header.
@@ -75,7 +75,7 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     private var dragGesture: some Gesture {
         return DragGesture().updating(self.$translation) { value, state, _ in
             let value = getTranslationValue(value)
-            switch constants.axisType {
+            switch constants.axisMode {
             case .bottom, .trailing: if alpha == 0 && value > 0 { return }
             case .top, .leading: if alpha == 0 && value < 0 { return }
             }
@@ -83,7 +83,7 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
         }
         .onEnded { value in
             if isPresented {
-                switch constants.axisType {
+                switch constants.axisMode {
                 case .top, .leading:
                     guard -getTranslationValue(value) > limitGap else { return }
                 case .bottom, .trailing:
@@ -98,13 +98,13 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     private var offset: CGFloat {
         var value: CGFloat = 0
         if !isPresented {
-            if constants.presentationType == .minimize {
+            if constants.presentationMode == .minimize {
                 value = constants.size
             }else {
                 value = constants.size + constants.header.size
             }
         }
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top, .leading: return -max(value - self.translation, 0)
         case .bottom, .trailing: return max(value + self.translation, 0)
         }
@@ -118,10 +118,10 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
         return value
     }
     
-    /// Returns a shape with rounded corners according to the AxisType.
+    /// Returns a shape with rounded corners according to the AxisMode.
     private var cornerShape: some Shape {
         let radius = constants.header.cornerRadius
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top:      return RoundCorner(bl: radius, br: radius)
         case .bottom:   return RoundCorner(tl: radius, tr: radius)
         case .leading:  return RoundCorner(tr: radius, br: radius)
@@ -133,7 +133,7 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     private var headerView: some View {
         let header = constants.header
         return ZStack {
-            switch constants.axisType {
+            switch constants.axisMode {
             case .top, .bottom:
                 ZStack {
                     Rectangle()
@@ -165,7 +165,7 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
         .clipShape(cornerShape)
         .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 0)
         .highPriorityGesture(dragGesture)
-        .opacity(constants.presentationType == .minimize ? 1 : alpha == 0 ? 0 : 1)
+        .opacity(constants.presentationMode == .minimize ? 1 : alpha == 0 ? 0 : 1)
         .onTapGesture {
             isPresented.toggle()
         }
@@ -213,12 +213,12 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     }
     
     //MARK: - method
-    /// Returns a content view according to the `ASAxisType`.
+    /// Returns a content view according to the `ASAxisMode`.
     /// - Returns: A content view.
     private func getContent() -> some View {
         let contentSize = constants.size + constants.header.size
         return GeometryReader { proxy in
-            switch constants.axisType {
+            switch constants.axisMode {
             case .top:
                 VStack(spacing: 0) {
                     self.contentView
@@ -259,17 +259,17 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
     /// - Parameter value: DragGesture.Value. `CGFloat`
     /// - Returns: Whether the content is exposed.
     private func getPresentedValue(_ value: DragGesture.Value) -> Bool {
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top, .leading: return getTranslationValue(value) > 0
         case .bottom, .trailing: return getTranslationValue(value) < 0
         }
     }
     
-    /// Returns the value of the gesture according to the `ASAxisType`.
+    /// Returns the value of the gesture according to the `ASAxisMode`.
     /// - Parameter value: DragGesture.Value `CGFloat`
-    /// - Returns: The horizontal and vertical values of the gesture according to the `ASAxisType`.
+    /// - Returns: The horizontal and vertical values of the gesture according to the `ASAxisMode`.
     private func getTranslationValue(_ value: DragGesture.Value) -> CGFloat {
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top, .bottom: return value.translation.height
         case .leading, .trailing: return value.translation.width
         }
@@ -281,7 +281,7 @@ public extension AxisSheet where Header == EmptyView, Content : View {
     /// Initializes `AxisSheet`
     /// - Parameters:
     ///   - isPresented: Indicates whether a content is currently presented.
-    ///   - constants: The axis type of the component.
+    ///   - constants: The component status information.
     ///   - content: A view builder that creates content.
     init(isPresented: Binding<Bool>, constants: ASConstant = .init(), @ViewBuilder content: @escaping () -> Content) {
         _isPresented = isPresented
@@ -295,7 +295,7 @@ public extension AxisSheet where Header : View, Content : View {
     /// Initializes `AxisSheet`
     /// - Parameters:
     ///   - isPresented: Indicates whether a content is currently presented.
-    ///   - constants: The axis type of the component.
+    ///   - constants: The component status information.
     ///   - header: The content of the header.
     ///   - content: A view builder that creates content.
     init(isPresented: Binding<Bool>, constants: ASConstant = .init(), @ViewBuilder header: @escaping () -> Header, @ViewBuilder content: @escaping () -> Content) {

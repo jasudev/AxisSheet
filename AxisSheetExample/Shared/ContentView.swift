@@ -74,7 +74,7 @@ struct ContentView: View {
     }
     
     private func getHeaderAngle() -> Angle {
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top, .bottom: return Angle(degrees: 0)
         case .leading: return Angle(degrees: 90)
         case .trailing: return Angle(degrees: -90)
@@ -82,10 +82,10 @@ struct ContentView: View {
     }
     
     private func getOffset() -> CGSize {
-        guard constants.presentationType == .minimize else {
+        guard constants.presentationMode == .minimize else {
             return .zero
         }
-        switch constants.axisType {
+        switch constants.axisMode {
         case .top:       return CGSize(width: 0, height: constants.header.size)
         case .bottom:    return CGSize(width: 0, height: -constants.header.size)
         case .leading:   return CGSize(width: constants.header.size, height: 0)

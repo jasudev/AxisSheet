@@ -25,16 +25,16 @@
 
 import SwiftUI
 
-/// The axis type of the component.
-public enum ASAxisType {
+/// The axis mode of the component.
+public enum ASAxisMode {
     case top
     case bottom
     case leading
     case trailing
 }
 
-/// The type of whether to expose the component when the isPresented value is false.
-public enum ASPresentationType {
+/// The mode of whether to expose the component when the isPresented value is false.
+public enum ASPresentationMode {
     case hide
     case minimize
 }
@@ -42,14 +42,14 @@ public enum ASPresentationType {
 /// The component status information.
 public struct ASConstant: Equatable {
     
-    /// The axis type of the component.
-    public var axisType: ASAxisType
+    /// The axis mode of the component.
+    public var axisMode: ASAxisMode
     
     /// The size of the content.
     public var size: CGFloat
     
-    /// The type of whether to expose the component when the isPresented value is false.
-    public var presentationType: ASPresentationType
+    /// The mode of whether to expose the component when the isPresented value is false.
+    public var presentationMode: ASPresentationMode
     
     /// The header status information.
     public var header: ASHeaderConstant
@@ -59,19 +59,19 @@ public struct ASConstant: Equatable {
     
     /// Initializes `ASConstant`
     /// - Parameters:
-    ///   - axisType: The axis type of the component. The default value is `.bottom`
+    ///   - axisMode: The axis mode of the component. The default value is `.bottom`
     ///   - size: The size of the content. The default value is `200`
-    ///   - presentationType: The type of whether to expose the component when the isPresented value is false. The default value is `.minimize`
+    ///   - presentationMode: The mode of whether to expose the component when the isPresented value is false. The default value is `.minimize`
     ///   - header: The header status information.
     ///   - background: The component background status information.
-    public init(axisType: ASAxisType = .bottom,
+    public init(axisMode: ASAxisMode = .bottom,
                 size: CGFloat = 200,
-                presentationType: ASPresentationType = .minimize,
+                presentationMode: ASPresentationMode = .minimize,
                 header: ASHeaderConstant = .init(),
                 background: ASBackgroundConstant = .init()) {
-        self.axisType = axisType
+        self.axisMode = axisMode
         self.size = size
-        self.presentationType = presentationType
+        self.presentationMode = presentationMode
         self.header = header
         self.background = background
     }
