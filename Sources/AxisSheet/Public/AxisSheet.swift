@@ -187,8 +187,8 @@ public struct AxisSheet<Header, Content>: View where Header: View, Content: View
             }
             .disabled(alpha == 0)
             /// Handled as a contentShape due to a bug where the disabled modifier was not properly applied on macOS.
-            .contentShape(ResizableRectangle(size: CGSize(width: proxy.size.width,
-                                                          height: proxy.size.height * (alpha == 0 ? 0 : 1))))
+            .contentShape(Rectangle().size(CGSize(width: proxy.size.width,
+                                                  height: proxy.size.height * (alpha == 0 ? 0 : 1))))
         }
 #endif
     }
